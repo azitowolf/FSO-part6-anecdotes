@@ -17,13 +17,15 @@ const asObject = (anecdote) => {
   }
 }
 
+//TODO: refactor
+
 const sortOrder = (a,b) => {
   if (a.votes < b.votes) {
-          return 1;
+    return 1;
   } else if (a.votes > b.votes) {
-          return -1;
+    return -1;
   } else {
-          return 0;
+    return 0;
   }
 }
 
@@ -44,8 +46,7 @@ export const createNoteAction = (content) => {
 }
 
 const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
+
   switch(action.type){
     case 'VOTE':
       const id = action.anecdote
