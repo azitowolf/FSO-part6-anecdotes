@@ -1,6 +1,6 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { voteAction, createNoteAction } from './reducers/anecdoteReducer'
+import { voteAction, createNoteAction, initializeAction } from './reducers/anecdoteReducer'
 import { setNotificationAction } from './reducers/notificationReducer'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
@@ -8,33 +8,34 @@ import AnecdoteList from './components/AnecdoteList'
 import Filter from './components/Filter'
 
 const App = () => {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(initializeAction())
+  }, [dispatch])
+
   const anecdotes = useSelector(state => {
     if (state.filter === '') return state.anecdotes
     if (state.filter.length) {
-      console.log(state.anecdotes)
       const result = state.anecdotes.filter((anecdote) => {
         return anecdote.content.includes(state.filter)
       })
-      console.log(result)
       return result
     }
     return state.anecdotes
   })
-  const dispatch = useDispatch()
 
-  const addNote = (event) => {
+  const addNote = async (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
     dispatch(createNoteAction(content))
-    dispatch(setNotificationAction(`Added Anecdote: [${content}] to list`))
-    setTimeout(() => { dispatch(setNotificationAction('')) }, 5000)
+    dispatch(setNotificationAction(`Added Anecdote: [${content}] to list`, 3))
   }
 
   const vote = (id) => {
-    dispatch(voteAction(id))
-    dispatch(setNotificationAction('voted successfully'))
-    setTimeout(() => { dispatch(setNotificationAction('')) }, 5000)
+    const anecdoteToUpdate = anecdotes.find((anecdote) => anecdote.id === id);     
+    dispatch(voteAction(anecdoteToUpdate))
+    dispatch(setNotificationAction('voted successfully', 10))
   }
 
   return (
