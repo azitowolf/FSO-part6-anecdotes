@@ -1,18 +1,28 @@
 import React from 'react';
 import Anecdote from './Anecdote'
+import { connect } from 'react-redux'
 
-const AnecdoteList = ({anecdotes, vote}) => {
+const AnecdoteList = (props) => {
     return (
         <div>
-            {anecdotes.map(anecdote =>
+            {props.anecdotes.map(anecdote =>
                 <Anecdote 
                     key = {anecdote.id} 
                     anecdote = {anecdote} 
-                    vote = {vote} 
+                    vote = {props.vote} 
                 />
             )}
         </div>
     )
 }
 
-export default AnecdoteList
+const mapStateToProps = (state) => {
+    // sometimes it is useful to console log from mapStateToProps
+    console.log(state)
+    return {
+      anecdotes: state.anecdotes,
+      filter: state.filter
+    }
+  }
+
+export default connect(mapStateToProps)(AnecdoteList)

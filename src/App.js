@@ -24,18 +24,22 @@ const App = () => {
     return state.anecdotes
   })
 
+  const notification = useSelector(state => {
+    return state.notification
+  })
+
   const addNote = async (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
     dispatch(createNoteAction(content))
-    dispatch(setNotificationAction(`Added Anecdote: [${content}] to list`, 3))
+    dispatch(setNotificationAction(`Added Anecdote: [${content}] to list`, 3, notification.intervalID))
   }
 
   const vote = (id) => {
     const anecdoteToUpdate = anecdotes.find((anecdote) => anecdote.id === id);     
     dispatch(voteAction(anecdoteToUpdate))
-    dispatch(setNotificationAction('voted successfully', 10))
+    dispatch(setNotificationAction(`voted successfully for anecdote # ${anecdoteToUpdate.id}`, 5, notification.intervalID))
   }
 
   return (
@@ -44,7 +48,7 @@ const App = () => {
       <h2>Anecdotes</h2>
       <Filter />
       <AnecdoteForm addNote={addNote} />
-      <AnecdoteList anecdotes={anecdotes} vote={vote} />
+      <AnecdoteList vote={vote} />
       {/* <pre>{JSON.stringify(anecdotes, undefined, 2)}</pre> */}
     </div>
   )
