@@ -1,5 +1,5 @@
 import deepFreeze from 'deep-freeze'
-import counterReducer from './anecdoteReducer'
+import anecdoteReducer, { initializeAction } from './anecdoteReducer'
 
 describe('anecdote reducer', () => {
     const anecdotesAtStart = [
@@ -21,13 +21,13 @@ describe('anecdote reducer', () => {
     }
     const initialState = anecdotesAtStart.map(asObject)
 
-  test('should return a proper initial state when called with undefined state', () => {
-    const state = {}
+  test('should return a proper initial state when called with test data', () => {
+    const state = initialState
     const action = {
       type: 'DO_NOTHING'
     }
 
-    const newState = counterReducer(undefined, action)
+    const newState = anecdoteReducer(state, action)
     expect(newState[0]).toEqual(expect.objectContaining({
         content: expect.any(String),
         id: expect.any(String),
@@ -44,7 +44,7 @@ describe('anecdote reducer', () => {
 
     deepFreeze(state) // snapshot of the state, making sure we don't modify this non-functionally
 
-    const newState = counterReducer(state, action)
+    const newState = anecdoteReducer(state, action)
     expect(newState).toEqual(expect.arrayContaining ([
         {"content":"If it hurts, do it more often","id":expect.any(String),"votes":1},
         {"content":"Adding manpower to a late software project makes it later!","id":expect.any(String),"votes":0},
@@ -64,7 +64,7 @@ describe('anecdote reducer', () => {
 
     deepFreeze(state) // snapshot of the state, making sure we don't modify this non-functionally
 
-    const newState = counterReducer(state, action)
+    const newState = anecdoteReducer(state, action)
     expect(newState).toEqual(expect.arrayContaining ([
         {"content":"If it hurts, do it more often","id":expect.any(String),"votes":0},
         {"content":"Adding manpower to a late software project makes it later!","id":expect.any(String),"votes":0},
